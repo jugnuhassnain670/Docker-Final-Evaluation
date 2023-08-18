@@ -1,0 +1,39 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: jugnu670
+      MYSQL_DATABASE: jugnu
+      MYSQL_USER: jugnu
+      MYSQL_PASSWORD: jugnu670
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  web :
+    depends_on: 
+      - mysql
+    links:
+      - mysql:mysql
+    build : .
+    restart: always
+    ports :
+      - "8000:80"
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin_container
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_ARBITRARY: 1
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+
+volumes:
+  mysql_data:
